@@ -53,4 +53,26 @@ if (configJSON) {
   initReporters(config);
 }
 
-command.run(jasmine, process.argv.slice(2));
+let jasmine_args : Array<string> = []
+let skip = false
+process.argv.slice(2).forEach((k) => {
+    if (k.indexOf("--") > -1) {
+        // is a key
+        if (tsNodeOptions[k.replace("--", "")]) {
+            // is a ts-node option, dont pass this
+            // and the next item to jasmine
+            skip = true;
+        }
+    } else {
+        // is a value
+        if (!skip) {
+            // only pass if the last item (key) wasnt a ts-node option
+            jasmine_args.push(k)
+        } else {
+            // reset skip
+            skip = false
+        }
+    }
+});
+
+command.run(jasmine, jasmine_args);
