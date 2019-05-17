@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import * as fs from "fs";
 import * as path from "path";
-import { register } from "ts-node/dist";
+import { parse, register } from "ts-node/dist";
 import { argv } from "yargs";
 
 const TS_NODE_OPTIONS = [
@@ -19,7 +19,14 @@ const TS_NODE_OPTIONS = [
   "compilerOptions",
 ];
 
-const tsNodeOptions = Object.assign({}, ...TS_NODE_OPTIONS.map((option) => argv[option] && {[option]: argv[option]}));
+const tsNodeOptions = Object.assign({}, ...TS_NODE_OPTIONS.map((option) => {
+  if (argv[option]) {
+    return (option === "compilerOptions")
+      ? {compilerOptions: parse(argv[option])}
+      : {[option]: argv[option]};
+  }
+}));
+
 register(tsNodeOptions);
 
 const Jasmine = require("jasmine");
@@ -53,8 +60,8 @@ if (configJSON) {
   initReporters(config);
 }
 
-let jasmine_args : Array<string> = []
-let skip = false
+const jasmineArgs: string[] = [];
+let skip: boolean = false;
 process.argv.slice(2).forEach((k) => {
     if (k.indexOf("--") > -1) {
         // is a key
@@ -67,12 +74,12 @@ process.argv.slice(2).forEach((k) => {
         // is a value
         if (!skip) {
             // only pass if the last item (key) wasnt a ts-node option
-            jasmine_args.push(k)
+            jasmineArgs.push(k);
         } else {
             // reset skip
-            skip = false
+            skip = false;
         }
     }
 });
 
-command.run(jasmine, jasmine_args);
+command.run(jasmine, jasmineArgs);

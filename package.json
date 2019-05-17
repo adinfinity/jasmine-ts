@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "bin": "lib/index.js",
   "scripts": {
-    "test": "tslint index.ts && tsc && node lib/index.js --config=spec/jasmine.json spec/jasmine-ts.spec.ts",
+    "test": "./node_modules/.bin/tslint index.ts && tsc && node lib/index.js --config=spec/jasmine.json spec/jasmine-ts.spec.ts --compilerOptions='{\"allowJs\": true}'",
     "prepublishOnly": "tsc"
   },
   "repository": {
@@ -26,17 +26,22 @@
   },
   "homepage": "https://github.com/adinfinity/jasmine-ts#readme",
   "dependencies": {
-    "jasmine": "^2.6.0",
-    "ts-node": "^3.2.0",
-    "typescript": "^2.4.1",
     "yargs": "^8.0.2"
+  },
+  "peerDependencies": {
+    "jasmine": ">= 2.0",
+    "ts-node": ">=3.2.0 <8",
+    "typescript": ">=2.4.1"
   },
   "devDependencies": {
     "@types/jasmine": "^2.5.53",
     "@types/node": "^8.0.12",
     "@types/yargs": "^8.0.1",
+    "jasmine": ">= 2.0",
     "jasmine-spec-reporter": "^4.1.1",
-    "tslint": "^5.5.0"
+    "ts-node": ">=3.2.0 <8",
+    "tslint": "^5.5.0",
+    "typescript": ">=2.4.1"
   },
   "engines": {
     "node": ">= 5.12"
